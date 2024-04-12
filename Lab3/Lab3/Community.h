@@ -1,4 +1,5 @@
 #include<string>
+#include<iostream>
 #pragma once
 class Community
 {
@@ -15,4 +16,7 @@ public:
 
 	int GetMembers();
 	void SetMembers(const int members);
+
+friend std::ostream &operator <<(std::ostream& out, Community& r);
+friend std::istream &operator >>(std::istream& in, Community& r);
 };

@@ -9,6 +9,8 @@ int main()
 {
 	int n = 1;
 	int stop = 0;
+	int id;
+	int field_index;
 	Community* arr=new Community[n];
 	string fileName;
 	char key = ' ';
@@ -20,6 +22,9 @@ int main()
 				"\n|-- 3 - print current database"
 				"\n|-- 4 - read database from file"
 				"\n|-- 5 - find in current database"
+				"\n|-- 6 - add new elements for current database"
+				"\n|-- 7 - delete element by id for current database"
+				"\n|-- 8 - change element by id for current database"
 				"\n|-- write any symbol to stop app"
 				"\n|---- enter: ";
 		cin >> key;
@@ -48,6 +53,25 @@ int main()
 						"\n|---- enter: ";
 				cin >> key2;
 				FileManager::found(arr, n, atoi(&key2));
+				break;
+			case '6':
+				FileManager::add(&arr, &n);
+				break;
+			case '7':
+				cout << "Enter element id: ";
+				cin >> id;
+				FileManager::del(&arr, &n, id);
+				break;
+			case '8':
+				cout << "Enter element id: ";
+				cin >> id;
+				cout << "Select field id what you want change"
+						"\n 1-name"
+						"\n 2-description"
+						"\n 3-members"
+						"\n enter: ";
+				cin >> field_index;
+				FileManager::update_elem(&arr, n, id, field_index);
 				break;
 			default:
 				stop = 1;

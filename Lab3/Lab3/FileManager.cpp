@@ -1,4 +1,5 @@
 #include "FileManager.h"
+#include "Community.h"
 #include<iostream>
 #include<fstream>
 #include<string>
@@ -16,24 +17,10 @@ retry:
 	}
 	else {
 		*arr = new Community[*n];
-		for (int i = 0; i < *n; i++) {
-			string name;
-			string description;
-			int members;
-
-			cout << "enter name:";
-			cin >> name;
-
-			cout << "enter description:";
-			cin >> description;
-
-			cout << "enter members count:";
-			cin >> members;
-
-			(*arr)[i].SetName(name);
-			(*arr)[i].SetDescription(description);
-			(*arr)[i].SetMembers(members);
-			
+		for (int i = 0; i < *n; i++)
+		{
+			cout << "ID: " << i << endl;
+			cin >> (*arr)[i];
 		}
 	}
 }
@@ -47,15 +34,16 @@ void FileManager::write(Community* arr, int n, const  std::string name)
 	}
 	f << n << endl;
 	for (int i = 0; i < n; i++)
-		f << arr[i].GetName() + " " + arr[i].GetDescription() + " " << arr[i].GetMembers()<<endl;
+		f << arr[i].GetName() + " " + arr[i].GetDescription() + " " << arr[i].GetMembers() << endl;
 	f.close();
+	cout << "|database saved succesfull" << endl;
 }
 void FileManager::read(Community**  arr, int* n, const  std::string name)
 {
 	ifstream f(name + ".txt");
 	if(!f.is_open()) 
 	{
-		cout << "Error: file is not found" << endl;
+		cout << "|Error: file is not found" << endl;
 		return;
 	}
 	f >> *n;
@@ -69,6 +57,7 @@ void FileManager::read(Community**  arr, int* n, const  std::string name)
 		(*arr)[i].SetMembers(stoi(words[2]));
 	}
 	f.close();
+	cout << "|database loaded succesfull" << endl;
 }
 void FileManager::found(Community* arr, int n, const  int found_index)
 {
@@ -117,9 +106,66 @@ void FileManager::found(Community* arr, int n, const  int found_index)
 void FileManager::print(Community* arr, int n)
 {
 	for (int i = 0; i < n; i++) {
-		cout << "Name: " + (arr)[i].GetName() << endl;
-		cout << "Description: " + (arr)[i].GetDescription() << endl;
-		cout << "Members: " << (arr)[i].GetMembers() << endl;
-		cout << endl;
+		cout << "ID: " << i << endl;
+		cout << arr[i];
+	}
+}
+void FileManager::add(Community** arr, int* n)
+{
+	int n2;
+	Community* old_arr = *arr;
+	Community* add_arr;
+
+	cout << "Enter a count of new elements: ";
+	cin >> n2;
+
+	*arr = new Community[*n + n2];
+	add_arr = new Community[n2];
+
+	for (int i = 0; i < n2; i++)
+		cin >> add_arr[i];
+
+	for (int i = 0; i < *n; i++)
+		(*arr)[i] = old_arr[i];
+	for (int i = 0; i < n2; i++)
+		(*arr)[*n + i] = add_arr[i];
+
+	*n = *n + n2;
+}
+void FileManager::del(Community** arr, int* n, int del_ind) 
+{
+	*n=*n-1;
+
+	Community* old_arr = *arr;
+	Community* new_arr = new Community[*n];
+	for (int i = 0; i < *n; i++)
+	{
+		if (i >= del_ind)
+			new_arr[i] = old_arr[i + 1];
+		else
+			new_arr[i] = old_arr[i];
+	}
+	*arr = new_arr;
+}
+void FileManager::update_elem(Community** arr, int n, int elem_index, int update_ind) {
+	string stringField;
+	int members;
+	switch (update_ind)
+	{
+	case 1:
+		cout << "Enter new name: ";
+		cin >> stringField;
+		(*arr)[elem_index].SetName(stringField);
+		break;
+	case 2:
+		cout << "Enter new description: ";
+		cin >> stringField;
+		(*arr)[elem_index].SetDescription(stringField);
+		break;
+	case 3:
+		cout << "Enter new members count: ";
+		cin >> members;
+		(*arr)[elem_index].SetMembers(members);
+		break;
 	}
 }
